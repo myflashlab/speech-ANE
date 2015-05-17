@@ -61,4 +61,4 @@ Don't forget to include the necessary permissions and services in the air manife
 ..
 ```
 
-**NOTICE: if you are trying to run the extension on an iOS device, you will need a Google Browser API key enabled for the Speech API. if you are running on an Android device, you won’t need this set at all. do the following to obtain your key: http://myappsnippet.com/DOC/com/doitflash/air/extensions/speech/Speech.html#googleApiKey and again, on the iOS part, you need to copy a pre-written php file to your server and let the extension connect to there. read here: #proxyPath**
+**NOTICE: if you are trying to run the extension on an iOS device, you will need a Google Browser API key enabled for the Speech API. if you are running on an Android device, you won’t need this set at all. do the following to obtain your key: http://myappsnippet.com/DOC/com/doitflash/air/extensions/speech/Speech.html#googleApiKey and again, on the iOS part, you need to copy a pre-written php file to your server and let the extension connect to there. read here: http://myappsnippet.com/DOC/com/doitflash/air/extensions/speech/Speech.html#proxyPath**
