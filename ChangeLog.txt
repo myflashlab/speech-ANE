@@ -1,0 +1,20 @@
+Speech API Adobe Air Native Extension
+
+
+Apr 24, 2013	>> V1.0: 	beginning of the journey!
+May 19, 2013	>> V2.0: 	added language, pitch and speech rate support 
+May 21, 2014	>> V3.0: 	Built the .java and .as codes from scratch! now the extension works with no annoying mic image activity!
+
+Dec 18, 2014	>> V4.0:	re-organized the as library to better manage the initialization and listeners
+				you can see what languages are supported on your device for TTS and STT separately
+				added new methods to the API like stopTTS, shutdownTTS and new properties like isSpeaking, isSupportedTTS, isSupportedSTT
+				when you are offline, the extension will still return the offline available languages so you can still use the TTS
+				when using Speech to text, you can specify what language the engine should listen to: _ex.startListening(“en_US”);
+				adding support for Android x86
+
+Feb 15, 2015	>> V5.0:	added iOS 64-bit support
+				removed wav file save option as it was not possible on iOS part (if you need it, keep using V4.0)
+				call "startListening" and start speaking into your phone. but remember to call "stopListening" when you're done!
+				added volume control for TTS sounds
+
+May 17, 2015 	>> V5.1: 	removed android-support-v4.jar dependency
