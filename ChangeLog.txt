@@ -18,3 +18,8 @@ Feb 15, 2015	>> V5.0:	added iOS 64-bit support
 				added volume control for TTS sounds
 
 May 17, 2015 	>> V5.1: 	removed android-support-v4.jar dependency
+
+Aug 26, 2015 	>> V6.0: 	Added back .wav save option for TTS to the Android version with a new approach and easy to use
+				fixed volume problem
+				fixed force close termination problem on Android (you still need to dispose the extension when leaving the app)
+				disabled TTS on iOS because Google stopped TTS service for iOS. STT is working fine on iOS though.

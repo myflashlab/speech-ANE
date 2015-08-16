@@ -17,7 +17,10 @@ package
 	import flash.events.InvokeEvent;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.filesystem.File;
+	import flash.media.Sound;
 	import flash.media.SoundChannel;
+	import flash.net.URLRequest;
 	import flash.text.AntiAliasType;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
@@ -144,13 +147,14 @@ package
 			// initialize the extension
 			_ex = new Speech();
 			_ex.googleApiKey = "*****"; // used for the iOS part only
-			_ex.proxyPath = "http://yoursite.com/proxy_TTS_API.php"; // used for the iOS part only
+			//_ex.proxyPath = "http://yoursite.com/proxy_TTS_API.php"; // iOS no longer supports TTS. Google stopped the service, so you won't need this method anymore
 			_ex.addEventListener(SpeechEvent.INITIALIZATION, onInitialization);
 			_ex.addEventListener(SpeechEvent.TTS_SUPPORTED_LANGS, onTTS_langs); // supported TTS langs will be dispatched immifietly after a successfull SpeechEvent.INITIALIZATION
 			_ex.addEventListener(SpeechEvent.STT_SUPPORTED_LANGS, onSTT_langs); // supported STT langs will take a few seconds to be dispatched. (we really can't know what is happening inside android core, but it takes a few seconds!)
 			_ex.addEventListener(SpeechEvent.ERROR, onError);
 			_ex.addEventListener(SpeechEvent.SPEECH_STATE, onSpeechState);
 			_ex.addEventListener(SpeechEvent.RECOGNITION_RESULTS, onSpeechResult);
+			_ex.addEventListener(SpeechEvent.SPEECH_FILE_SAVED, onFileSaved);
 			
 			var btn0:MySprite = createBtn("Text to Speech: \"hello World\"");
 			btn0.alpha = 0.5;
@@ -163,6 +167,14 @@ package
 			var btn2:MySprite = createBtn("Stop Text to Speech");
 			btn2.alpha = 0.5;
 			_list.add(btn2);
+			
+			var btn7:MySprite = createBtn("increase volume", 0xFF9900);
+			btn7.alpha = 0.5;
+			_list.add(btn7);
+			
+			var btn8:MySprite = createBtn("decrease volume", 0xFF9900);
+			btn8.alpha = 0.5;
+			_list.add(btn8);
 			
 			var btn5:MySprite = createBtn("start listening to you... talk English", 0xCCCCCC);
 			btn5.alpha = 0.5;
@@ -222,6 +234,12 @@ package
 				
 				btn2.addEventListener(MouseEvent.CLICK, ttsStop);
 				btn2.alpha = 1;
+				
+				btn7.addEventListener(MouseEvent.CLICK, increaseVolume);
+				btn7.alpha = 1;
+				
+				btn8.addEventListener(MouseEvent.CLICK, decreaseVolume);
+				btn8.alpha = 1;
 			}
 			
 			function onSTT_langs(e:SpeechEvent):void
@@ -235,6 +253,8 @@ package
 				}
 				
 				C.log("number of supported langs for STT = " + e.param.length);
+				
+				C.log("\n\n>> iOS does NOT Support TTS <<");
 				
 				trace("------- availble STT languages ---------");
 				for each (var item:String in e.param) 
@@ -257,18 +277,16 @@ package
 			{
 				C.log("wait for the engine to start talking...");
 				
-				_ex.volume = 100;
-				_ex.tts("hello world!", "en", 1, 1, Speech.QUEUE_ADD);
-				_ex.tts("You may call this method as many time as you wish.", "en", 1, 1, Speech.QUEUE_ADD);
-				_ex.tts("and as long as the QUEUE option is set to true, it will play the voice just fine.", "en", 1, 1, Speech.QUEUE_ADD);
-				_ex.tts("Just remember that you are limited to 4000 characters per call", "en", 1, 1, Speech.QUEUE_ADD);
+				_ex.tts("hello world!", "en", 1, 1, Speech.QUEUE_ADD/*, "tts/"*/); // "tts/" is an address on your sdcard to save the .wav file of the speech instead of playing it
+				_ex.tts("You may call this method as many time as you wish.", "en", 1, 1, Speech.QUEUE_ADD/*, "tts/"*/);
+				_ex.tts("and as long as the QUEUE option is set to true, it will play the voice just fine.", "en", 1, 1, Speech.QUEUE_ADD/*, "tts/"*/);
+				_ex.tts("Just remember that you are limited to 4000 characters per call", "en", 1, 1, Speech.QUEUE_ADD/*, "tts/"*/);
 			}
 			
 			function ttsPlaySilence(e:MouseEvent):void
 			{
 				C.log("wait for the engine to start talking...");
 				
-				_ex.volume = 100;
 				_ex.tts("This is a play silence test and I am going to pause now!", "en", 1, 1, Speech.QUEUE_ADD);
 				_ex.ttsPause(1000, Speech.QUEUE_ADD);
 				_ex.tts("now, pause a little longer.", "en", 1, 1, Speech.QUEUE_ADD);
@@ -281,6 +299,22 @@ package
 			function ttsStop(e:MouseEvent):void
 			{
 				_ex.stopTTS();
+			}
+			
+			function increaseVolume(e:MouseEvent):void
+			{
+				_ex.volume = _ex.volume + 10;
+				if (_ex.volume > 100) _ex.volume = 100;
+				
+				C.log("volume = " + _ex.volume);
+			}
+			
+			function decreaseVolume(e:MouseEvent):void
+			{
+				_ex.volume = _ex.volume - 10;
+				if (_ex.volume < 0) _ex.volume = 0;
+				
+				C.log("volume = " + _ex.volume);
 			}
 			
 			function startListening(e:MouseEvent):void
@@ -317,7 +351,11 @@ package
 			C.log("-------------");
 		}
 		
-		
+		private function onFileSaved(e:SpeechEvent):void
+		{
+			var file:File = new File(e.param);
+			C.log(file.nativePath)
+		}
 		
 		
 		
